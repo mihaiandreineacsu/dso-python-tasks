@@ -84,4 +84,4 @@ python hydra.py -u <username> -s <remoteserver> -w dictionary.txt
 
 This reads a list of words from dictionary.txt file.
 
-After the list of words is set, hydra loops over all words at tries to establish connection to the server via ssh-client.
+After the list of words is set, hydra loops over all words and tries to establish connection to the server via ssh-client.
