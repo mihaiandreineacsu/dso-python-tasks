@@ -1,6 +1,6 @@
 Educational Use License
 
-This project contains the source code for an implementation of the Hydra tool by Mihai-Andrei Neacsu. Hydra can be used to [insert specific functions or features here].
+This project contains the source code for an implementation of the Hydra tool by Mihai-Andrei Neacsu. Hydra can be used to connect to servers via ssh using a list of words as passwords.
 
 This code is provided under the following terms:
 

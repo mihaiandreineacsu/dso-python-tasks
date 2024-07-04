@@ -1,7 +1,7 @@
 # My `hydra clone` tool
 
 This folder contains the source code for my own implementation of the `hydra` tool.
-Hydra can be used to connect to servers via ssh using a list of words as passwords.
+Hydra clone can be used to connect to servers via ssh using a list of words as passwords.
 
 This is a lightweight implementation that covers the following features/options:
 
