@@ -5,6 +5,7 @@
 .pyc
 .venv
 venv
+__pycache__
 
 # environment variables
 *.env*
