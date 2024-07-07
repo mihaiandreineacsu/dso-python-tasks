@@ -105,7 +105,7 @@ def establish_connection(args: argparse.Namespace, password: str)-> paramiko.SSH
     Establishes an ssh connection to <args.username>@<args.server>
 
     Args:
-        args (argparse.Namespace): Command-line arguments containing the username and server to connect to
+        args (argparse.Namespace): Command-line arguments containing the username server and port to connect to
         password (str): Credential for establishing ssh connection
 
     Returns:
@@ -114,7 +114,8 @@ def establish_connection(args: argparse.Namespace, password: str)-> paramiko.SSH
     try:
         # Establish the connection
         ssh = paramiko.SSHClient()
-        ssh.connect(args.server, username=args.username, password=password)
+        ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        ssh.connect(hostname=args.server, port=args.port, username=args.username, password=password)
         return ssh
     except paramiko.AuthenticationException:
         print(f"Authentication failed, please verify your credentials!")

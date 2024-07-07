@@ -22,6 +22,7 @@ This is a lightweight implementation that covers the following features/options:
 
 - -u, --username (str) required: Username to connect
 - -s, --server (str) required: Server as IP-Address or DNS name to connect
+- -p, --port (str) optional: SSH Port. Default is 22
 - -w, --wordlist (str) optional: Word list file used as dictionary
 - -c, characterset (str) optional: Basic characters set used to generate a list of words. Default is [a-z]. Complex character set will be sanitized.
 - --min (int) optional: Minimal generated word length. Default is 3. Can not be bigger then --max.
@@ -33,6 +34,7 @@ This is a lightweight implementation that covers the following features/options:
 - [ini.py](./init.py): initializes the command-line arguments
 - [utils.py](./utils.py): validates min and max command-line arguments, sanitizes complex characterset command-line argument, generates words from characterset command-line argument and reads words from wordlist command-line arguments
 - [requirements.txt](./requirements.txt): contains dependencies
+- [Dockerfile](./Dockerfile): used as a simple target machine to try ssh connection on, takes two build arguments, PORT for ssh service and PASSWORD for the root user
 
 ## Getting started
 
@@ -42,6 +44,9 @@ This is a lightweight implementation that covers the following features/options:
 # Create and activate python virtual environment
 python -m venv venv
 venv/Scripts/activate
+
+# Activate environment
+./venv/Scripts/activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -54,6 +59,7 @@ pip install -r requirements.txt
 python hydra.py -u <username> -s <remoteserver>
 # username: <username>
 # server: <remoteserver>
+# port: 22
 # min: 3
 # max: 3
 # characterset: [a-z]
@@ -66,6 +72,7 @@ This generates a list of words, containing all possible combination of all lower
 python hydra.py -u <username> -s <remoteserver> -c [a-z0-9] --min 5 --max 5
 # username: <username>
 # server: <remoteserver>
+# port: 22
 # min: 5
 # max: 5
 # characterset: [a-z0-9]
@@ -78,6 +85,7 @@ This generates a list of words, containing all possible combination of all lower
 python hydra.py -u <username> -s <remoteserver> -w dictionary.txt
 # username: <username>
 # server: <remoteserver>
+# port: 22
 # wordlist: dictionary.txt
 # characterset, min and max command-line arguments will be ignored
 ```
@@ -85,3 +93,33 @@ python hydra.py -u <username> -s <remoteserver> -w dictionary.txt
 This reads a list of words from dictionary.txt file.
 
 After the list of words is set, hydra loops over all words and tries to establish connection to the server via ssh-client.
+If connection is a success, the password is printed and then it runs 'whoami' command then prints the result.
+
+### Prove of concept
+
+```powershell
+# Build the target machine
+docker build --build-arg PORT=<ssh-port> PASSWORD=<root-password> -t python-ssh .
+
+# Add <root-password> to dictionary.txt
+
+# Run the target machine
+docker run -d --name python-ssh-container -p <ssh-port>:<ssh-port> python-ssh
+
+# On host machine run (make sure the python environment is activate):
+python hydra.py -u root -s localhost -p <ssh-port> -w dictionary.txt
+
+Initializing Hydra Clone...
+Getting words...
+Using File dictionary.txt to read words...
+Got 1 Word(s)...
+Starting connections to localhost as root
+Please wait...
+Connection 1 established! Password -> changeme
+Executing command 'whoami'...
+Command response: root
+
+Closing SSH Client...
+Hydra Exited!
+
+```
