@@ -12,6 +12,7 @@ This is a lightweight implementation that covers the following features/options:
 
 - python
 - venv
+- docker (optionally for prove of concept)
 
 ## Dependencies
 
