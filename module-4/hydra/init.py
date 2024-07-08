@@ -7,6 +7,8 @@ Author: Mihai-Andrei Neacsu
 
 import argparse
 
+from utils import log_msg
+
 def init()-> argparse.Namespace:
     """
     Initializes Command-line arguments.
@@ -24,7 +26,7 @@ def init()-> argparse.Namespace:
         Using wordlist: $python hydra.py -u mihaiandrei -s 127.0.0.1 -p 2222 -w dictionary.txt
         Using characterset: $python hydra.py -u mihaiandrei -s 127.0.0.1 -p 2222 -c [a-ZA-z0-9] --min 3 --max 4
     """
-    print("Initializing Hydra Clone...")
+    log_msg("Initializing Hydra Clone...")
     parser = argparse.ArgumentParser(description='Hydra Clone')
 
     parser.add_argument('-u', '--username', required=True, type=str, help='Username to connect')

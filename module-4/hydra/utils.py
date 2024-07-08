@@ -7,8 +7,14 @@ Author: Mihai-Andrei Neacsu
 
 import argparse
 import re
+from typing import Literal
 import exrex
 import paramiko
+import datetime
+
+
+LoggerLevel = Literal["ERROR", "INFO", "WARNING"]
+
 
 def validate_min_max(min_val: int, max_val: int)-> tuple[int, int]:
     """
@@ -92,10 +98,10 @@ def get_words(args: argparse.Namespace)-> list[str]:
         args (argparse.Namespace): Passed args on script run
     """
     if args.wordlist:
-        print(f"Using File {args.wordlist} to read words...")
+        log_msg(f"Using File {args.wordlist} to read words...")
         words = read_words_list(args.wordlist)
     else:
-        print(f"Using Character set {args.characterset} to generate words...")
+        log_msg(f"Using Character set {args.characterset} to generate words...")
         words = generate_words_list(args)
     return words or []
 
@@ -118,11 +124,30 @@ def establish_connection(args: argparse.Namespace, password: str)-> paramiko.SSH
         ssh.connect(hostname=args.server, port=args.port, username=args.username, password=password)
         return ssh
     except paramiko.AuthenticationException:
-        print(f"Authentication failed, please verify your credentials!")
+        log_msg(f"Authentication failed, please verify your credentials!", "ERROR")
         ssh.close()
     except paramiko.SSHException as sshException:
-        print(f"Unable to establish SSH connection: {sshException}")
+        log_msg(f"Unable to establish SSH connection: {sshException}", "ERROR")
         ssh.close()
     except Exception as e:
-        print(f"Operation error: {e}")
+        log_msg(f"Operation error: {e}", "ERROR")
         ssh.close()
+
+
+def log_msg(msg: str, level: LoggerLevel="INFO"):
+    """
+    Logs formatted error messages.
+
+    Usage examples:
+        log_msg("my message")                       # [2024.08.07 17:27:36:12]    [INFO] [my message]
+        log_msg("my error message", "ERROR")        # [2024.08.07 17:27:36:12]    [ERROR] [my error message]
+        log_msg("my warning message", "WARNING")    # [2024.08.07 17:27:36:12]    [WARNING] [my error message]
+
+    Args:
+        msg (str): Message to be logged
+        level (LoggerLevel): The type of logging msg. Default is "INFO"
+    """
+    assert isinstance(msg, str), "msg must be a string"
+    assert level in LoggerLevel.__args__, f"level must be one of {LoggerLevel.__args__}"
+    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    print(f"[{current_time}]\t[{level}] [{msg}]")
