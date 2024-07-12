@@ -110,7 +110,7 @@ If connection is a success, the password is printed and then it runs 'whoami' co
 # Build the target machine
 docker build \
     --build-arg PORT=2222 \
-    PASSWORD=changeme \
+    --build-arg PASSWORD=changeme \
     -t python-ssh .
 
 # Add changeme to dictionary.txt
