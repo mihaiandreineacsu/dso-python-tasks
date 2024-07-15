@@ -137,7 +137,7 @@ python hashcat.py \
 ```bash
 # Generate and outputs a hash from string "power" to hashfile.txt file
 echo -n "power" | sha512sum | awk '{print $1}' > hashfile.txt
-# Outputs the string "power" to dictionary.txt
+# Outputs the string "power" to dictionary.txt file
 echo -n "power" > dictionary.txt
 
 # Run hashcat
