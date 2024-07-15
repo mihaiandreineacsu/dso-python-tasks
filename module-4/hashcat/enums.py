@@ -1,3 +1,10 @@
+"""
+This script is intended solely for educational purposes as an exercise in imitation.
+Any practical use of this script outside of educational or supervised demonstration scenarios is strictly prohibited.
+
+Author: Mihai-Andrei Neacsu
+"""
+
 from enum import Enum
 import hashlib
 from typing import TypeVar, Generic, List
