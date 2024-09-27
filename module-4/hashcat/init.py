@@ -11,7 +11,7 @@ from enums import HashModes, AttackModes
 from logger import log_msg
 
 
-def init()-> argparse.Namespace:
+def init() -> argparse.Namespace:
     """
     Initializes and validates Command-line arguments.
 
@@ -30,22 +30,44 @@ def init()-> argparse.Namespace:
     """
     log_msg("Initializing Hashcat Clone...")
 
-    parser = argparse.ArgumentParser(description='Hashcat Clone', add_help=False)
+    parser = argparse.ArgumentParser(description="Hashcat Clone", add_help=False)
 
     # Manually add help argument
-    parser.add_argument('-help', '--help', action='help', help='Show this help message and exit')
     parser.add_argument(
-        '-m', '--mode', required=False, type=int, choices=HashModes.list(), default=HashModes.MD5,
-        help='Hashmodes MD5 (0), SHA-1 (1), SHA-256 (2) and SHA-512 (3). Default MD5 (0)')
+        "-help", "--help", action="help", help="Show this help message and exit"
+    )
     parser.add_argument(
-        '-a', '--attack', required=False, type=int, choices=AttackModes.list(), default=AttackModes.BRUTE_FORCE_ATTACK,
-        help='Attack modes Brute-Force Attack (0) and Dictionary Attack (1). Default Brute-Force Attack (0)')
-    parser.add_argument('-d', '--dictionary', type=str, help='Dictionary file for Dictionary attack')
-    parser.add_argument('-c', '--characterset', type=str, default='[a-z]', help='Character set for Brute-Force attack')
+        "-m",
+        "--mode",
+        required=False,
+        type=int,
+        choices=HashModes.list(),
+        default=HashModes.MD5,
+        help="Hashmodes MD5 (0), SHA-1 (1), SHA-256 (2) and SHA-512 (3). Default MD5 (0)",
+    )
+    parser.add_argument(
+        "-a",
+        "--attack",
+        required=False,
+        type=int,
+        choices=AttackModes.list(),
+        default=AttackModes.BRUTE_FORCE_ATTACK,
+        help="Attack modes Brute-Force Attack (0) and Dictionary Attack (1). Default Brute-Force Attack (0)",
+    )
+    parser.add_argument(
+        "-d", "--dictionary", type=str, help="Dictionary file for Dictionary attack"
+    )
+    parser.add_argument(
+        "-c",
+        "--characterset",
+        type=str,
+        default="[a-z]",
+        help="Character set for Brute-Force attack",
+    )
 
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('-h', '--hash', type=str, help='Hash from direct input')
-    group.add_argument('-H', '--hashfile', type=str, help='Hash from file')
+    group.add_argument("-h", "--hash", type=str, help="Hash from direct input")
+    group.add_argument("-H", "--hashfile", type=str, help="Hash from file")
 
     args = parser.parse_args()
 

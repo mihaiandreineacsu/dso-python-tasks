@@ -14,5 +14,5 @@ def hashcat_entrypoint():
     exec_attack(args)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     hashcat_entrypoint()

@@ -12,7 +12,7 @@ import datetime
 LoggerLevel = Literal["ERROR", "INFO", "WARNING"]
 
 
-def log_msg(msg: str, level: LoggerLevel="INFO"):
+def log_msg(msg: str, level: LoggerLevel = "INFO"):
     """
     Logs formatted messages.
 

@@ -7,10 +7,11 @@ Author: Mihai-Andrei Neacsu
 
 from enum import Enum
 import hashlib
-from typing import TypeVar, Generic, List
+from typing import Type, TypeVar, Generic, List
 
 
-T = TypeVar('T')
+T = TypeVar("T")
+
 
 class HashCatEnum(Generic[T]):
     """
@@ -28,9 +29,8 @@ class HashCatEnum(Generic[T]):
     """
 
     @classmethod
-    def list(cls)-> List[T]:
+    def list(cls: Type["HashCatEnum[T]"]) -> List[T]:
         return [i.value for i in cls]
-
 
 
 class HashModes(HashCatEnum[int], Enum):
@@ -60,6 +60,6 @@ class AttackModes(HashCatEnum[int], Enum):
     """
     Defines Enums for all supported Attack Modes.
     """
+
     BRUTE_FORCE_ATTACK = 0
     DICTIONARY_ATTACK = 1
-

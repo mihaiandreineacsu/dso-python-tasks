@@ -10,7 +10,8 @@ from enums import AttackModes, HashModes
 import exrex
 from logger import log_msg
 
-def get_target_hash(args: argparse.Namespace)-> str:
+
+def get_target_hash(args: argparse.Namespace) -> str:
     """
     Get the target hash from the Command-line arguments:
         - direct from args.hash if its set
@@ -25,7 +26,7 @@ def get_target_hash(args: argparse.Namespace)-> str:
     if args.hash:
         return args.hash
     if args.hashfile:
-        with open(args.hashfile, 'r', encoding='utf-8') as file:
+        with open(args.hashfile, "r", encoding="utf-8") as file:
             first_line = file.readline().strip()
             return first_line
 
@@ -45,7 +46,7 @@ def get_hash_obj(args: argparse.Namespace):
     return hash_obj
 
 
-def get_words_from_dictionary(args: argparse.Namespace)-> list[str]:
+def get_words_from_dictionary(args: argparse.Namespace) -> list[str]:
     """
     Get the words list from a dictionary file if Dictionary Attack is chosen
 
@@ -55,13 +56,13 @@ def get_words_from_dictionary(args: argparse.Namespace)-> list[str]:
     Returns:
         list[str] : words list
     """
-    with open(args.dictionary, 'r', encoding='utf-8') as file:
+    with open(args.dictionary, "r", encoding="utf-8") as file:
         words = file.read().splitlines()
         log_msg(f"Got {len(words)} combination(s) to try")
         return words
 
 
-def get_words_from_character_set(args: argparse.Namespace)-> list[str]:
+def get_words_from_character_set(args: argparse.Namespace) -> list[str]:
     """
     Get the words list from a character set for a Brute-Force Attack
 
@@ -76,7 +77,7 @@ def get_words_from_character_set(args: argparse.Namespace)-> list[str]:
     return words
 
 
-def get_words(args: argparse.Namespace)-> list[str]:
+def get_words(args: argparse.Namespace) -> list[str]:
     """
     Based on provided Command-line arguments, it will:
         - get the words list from a dictionary file if Dictionary Attack is chosen
@@ -117,11 +118,11 @@ def exec_attack(args: argparse.Namespace):
             hash_obj.update(word.encode())
             hash = hash_obj.hexdigest()
             if target_hash == hash:
-                log_msg(f"Execution Lap finished.")
+                log_msg("Execution Lap finished.")
                 log_msg(f"Found match: {target_hash} -> {word}")
                 return
     except KeyboardInterrupt:
         log_msg(f"Execution Lap interrupted at {hash} -> {word}")
         return
-    log_msg(f"Execution Lap finished.")
-    log_msg(f"No match cloud be found!")
+    log_msg("Execution Lap finished.")
+    log_msg("No match cloud be found!")
