@@ -7,16 +7,12 @@ Author: Mihai-Andrei Neacsu
 
 import argparse
 import re
-from typing import Literal
 import exrex
 import paramiko
-import datetime
+from logger import log_msg
 
 
-LoggerLevel = Literal["ERROR", "INFO", "WARNING"]
-
-
-def validate_min_max(min_val: int, max_val: int)-> tuple[int, int]:
+def validate_min_max(min_val: int, max_val: int) -> tuple[int, int]:
     """
     Validate the min and max values.
 
@@ -28,11 +24,13 @@ def validate_min_max(min_val: int, max_val: int)-> tuple[int, int]:
         argparse.ArgumentTypeError: If validation fails.
     """
     if min_val < 1 or max_val > 10 or min_val > max_val:
-        raise argparse.ArgumentTypeError("Min must be >= 1, max must be <= 10, and min must be <= max.")
+        raise argparse.ArgumentTypeError(
+            "Min must be >= 1, max must be <= 10, and min must be <= max."
+        )
     return min_val, max_val
 
 
-def read_words_list(word_list: str)-> list[str]:
+def read_words_list(word_list: str) -> list[str]:
     """
     Reads all content of word_list file
 
@@ -43,14 +41,14 @@ def read_words_list(word_list: str)-> list[str]:
         argparse.ArgumentTypeError: If file not found
     """
     try:
-        with open(word_list, 'r', encoding='utf-8') as file:
+        with open(word_list, "r", encoding="utf-8") as file:
             words = file.read().splitlines()
         return words or []
     except FileNotFoundError:
         raise argparse.ArgumentTypeError(f"No such file or directory: {word_list}")
 
 
-def sanitize_pattern(pattern: str)-> str:
+def sanitize_pattern(pattern: str) -> str:
     """
     Sanitize the input regex pattern to be a basic one, removing any quantifiers or complex components.
 
@@ -61,15 +59,15 @@ def sanitize_pattern(pattern: str)-> str:
         str: The sanitized basic regex pattern.
     """
     # Remove any quantifiers {min,max}
-    pattern = re.sub(r'\{\d+,\d+\}', '', pattern)
+    pattern = re.sub(r"\{\d+,\d+\}", "", pattern)
     # Remove other complex regex components like *, +, ?
-    pattern = re.sub(r'[+*?]', '', pattern)
+    pattern = re.sub(r"[+*?]", "", pattern)
     # Ensure pattern is a simple character set (e.g., [a-z])
-    basic_pattern = ''.join(re.findall(r'\[.*?\]', pattern))
+    basic_pattern = "".join(re.findall(r"\[.*?\]", pattern))
     return basic_pattern
 
 
-def generate_words_list(args: argparse.Namespace)-> list[str]:
+def generate_words_list(args: argparse.Namespace) -> list[str]:
     """
     Generates word_list from args.characterset
         within args.min and args.max range
@@ -84,11 +82,11 @@ def generate_words_list(args: argparse.Namespace)-> list[str]:
     sanitized_pattern = sanitize_pattern(args.characterset)
     full_pattern = f"{sanitized_pattern}{{{min},{max}}}"
     generator = exrex.generate(full_pattern)
-    words = ('\n'.join(generator)).splitlines()
+    words = ("\n".join(generator)).splitlines()
     return words or []
 
 
-def get_words(args: argparse.Namespace)-> list[str]:
+def get_words(args: argparse.Namespace) -> list[str]:
     """
     Retrieve list of words based on given Command-line arguments.
         - If args.wordlist is given, return words from file
@@ -106,7 +104,9 @@ def get_words(args: argparse.Namespace)-> list[str]:
     return words or []
 
 
-def establish_connection(args: argparse.Namespace, password: str)-> paramiko.SSHClient | None:
+def establish_connection(
+    args: argparse.Namespace, password: str
+) -> paramiko.SSHClient | None:
     """
     Establishes an ssh connection to <args.username>@<args.server>
 
@@ -121,10 +121,15 @@ def establish_connection(args: argparse.Namespace, password: str)-> paramiko.SSH
         # Establish the connection
         ssh = paramiko.SSHClient()
         ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        ssh.connect(hostname=args.server, port=args.port, username=args.username, password=password)
+        ssh.connect(
+            hostname=args.server,
+            port=args.port,
+            username=args.username,
+            password=password,
+        )
         return ssh
     except paramiko.AuthenticationException:
-        log_msg(f"Authentication failed, please verify your credentials!", "ERROR")
+        log_msg("Authentication failed, please verify your credentials!", "ERROR")
         ssh.close()
     except paramiko.SSHException as sshException:
         log_msg(f"Unable to establish SSH connection: {sshException}", "ERROR")
@@ -134,20 +139,37 @@ def establish_connection(args: argparse.Namespace, password: str)-> paramiko.SSH
         ssh.close()
 
 
-def log_msg(msg: str, level: LoggerLevel="INFO"):
+def exec_connections(args: argparse.Namespace):
     """
-    Logs formatted error messages.
-
-    Usage examples:
-        log_msg("my message")                       # [2024.08.07 17:27:36:12]    [INFO] [my message]
-        log_msg("my error message", "ERROR")        # [2024.08.07 17:27:36:12]    [ERROR] [my error message]
-        log_msg("my warning message", "WARNING")    # [2024.08.07 17:27:36:12]    [WARNING] [my error message]
+    Based on provided Command-line arguments, it will:
+        1. get the list of words used as passwords
+        1. for each word try to establish a ssh connection
+        1. if connection established, try to run "whoami"
+        1. closes connection
 
     Args:
-        msg (str): Message to be logged
-        level (LoggerLevel): The type of logging msg. Default is "INFO"
+        args (argparse.Namespace): Passed args on script run
     """
-    assert isinstance(msg, str), "msg must be a string"
-    assert level in LoggerLevel.__args__, f"level must be one of {LoggerLevel.__args__}"
-    current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    print(f"[{current_time}]\t[{level}] [{msg}]")
+    log_msg("Getting words...")
+    words = get_words(args)
+    log_msg(f"Got {len(words)} Word(s)...")
+    log_msg(f"Starting connections to {args.server} as {args.username}\nPlease wait...")
+    for index, word in enumerate(words, start=1):
+        ssh_client = establish_connection(args, word)
+        if not ssh_client:
+            continue
+        log_msg(
+            f"Connection {index} established! Password -> {word}\nExecuting command 'whoami'..."
+        )
+        stdin, stdout, stderr = ssh_client.exec_command("whoami")
+        stdout_outlines = stdout.readlines()
+        stdout_resp = "".join(stdout_outlines)
+        log_msg(f"Command response: {stdout_resp}")
+        stderr_outlines = stderr.readlines()
+        stderr_resp = "".join(stderr_outlines)
+        if stderr_resp:
+            log_msg(f"Command error response: {stderr_resp}", "ERROR")
+        log_msg("Closing SSH Client...")
+        ssh_client.close()
+        break
+    log_msg("Hydra Exited!")
