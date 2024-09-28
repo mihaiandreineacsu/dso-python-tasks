@@ -1,4 +1,4 @@
-# Module 4 - Pentesting Tools in Python
+# Module 4 - Pen-testing Tools in Python
 
 > [!IMPORTANT]
 > All of the code provided and distributed in this repository was entirely written for educational purpose and practice reasons.

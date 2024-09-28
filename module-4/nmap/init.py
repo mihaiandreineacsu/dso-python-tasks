@@ -15,7 +15,7 @@ def validate_port_range(
     ports: str,
 ) -> tuple[str | None, str | None, str | None, str | None]:
     """
-    Validates given ports range format using a regex expresion
+    Validates given ports range format using a regex expression
     and returns the matched groups.
 
     Accepted formats:
@@ -48,9 +48,9 @@ def validate_ports_list(
 ) -> list[int]:
     """
     Validates ports list by given start and end ports or single port or hyphen:
-        - If hyphen is defined returns list range of porst from 0 to (MAX_PORT + 1) value.
+        - If hyphen is defined returns list range of ports from 0 to (MAX_PORT + 1) value.
         - Else if single_port is defined but not greater then MAX_PORT,
-          a list of one element containg single_port value is returned.
+          a list of one element containing single_port value is returned.
         - Else if start and end ports are defined but start port not greater then end
           and end not greater then MAX_PORT
           a list range of port from start port value to end port value + 1 is returned.
@@ -98,7 +98,7 @@ def validate_ports_list(
 
 def validate_args(args: argparse.Namespace):
     """
-    Validates Commandline arguments.
+    Validates Command-Line arguments.
         1. validates given ports range format
         1. validates ports list range
     """
@@ -121,8 +121,8 @@ def init() -> argparse.Namespace:
     Initializes Command-line arguments.
 
     Accepted arguments:
-        -p --port: (str) Ports range 0-65535
-        -a --addresse: (str) IP- or DNS-Adresse
+        -p --ports: (str) Ports range 0-65535
+        -a --address: (str) IP- or DNS-Address
         -d --debug: (bool) Prints debug logs
 
     Usage examples: TBD
@@ -133,7 +133,7 @@ def init() -> argparse.Namespace:
         "-p", "--ports", required=True, type=str, help="Ports range 0-65535"
     )
     parser.add_argument(
-        "-a", "--adresse", required=True, type=str, help="IP- or DNS-Adresse"
+        "-a", "--address", required=True, type=str, help="IP- or DNS-Address"
     )
     parser.add_argument("-d", "--debug", action="store_true", help="Prints debug logs")
 
