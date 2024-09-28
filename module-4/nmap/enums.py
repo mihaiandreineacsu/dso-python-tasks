@@ -6,11 +6,12 @@ Author: Mihai-Andrei Neacsu
 """
 
 from enum import Enum
-from typing import TypeVar, Generic, List
+from typing import Type, TypeVar, Generic, List
 
-T = TypeVar('T')
+T = TypeVar("T")
 
-class HashCatEnum(Generic[T]):
+
+class NmapEnum(Generic[T]):
     """
     Defines a way to get a list of all values from an Enum Class
 
@@ -26,10 +27,42 @@ class HashCatEnum(Generic[T]):
     """
 
     @classmethod
-    def list(cls)-> List[T]:
+    def list(cls: Type["NmapEnum[T]"]) -> List[T]:
         return [i.value for i in cls]
 
 
-class RangeEnum(HashCatEnum[int], Enum):
+class RangeEnum(NmapEnum[int], Enum):
     MAX_PORT = 65535
     MIN_PORT = 0
+
+
+class FlagsEnum(NmapEnum[int], Enum):
+    MAX_PORT = 65535
+    MIN_PORT = 0
+    FIN = 0x01  # Finish (Close the connection)
+    SYN = 0x02  # Synchronize (Initiate a connection)
+    RST = 0x04  # Reset (Abort the connection)
+    PSH = 0x08  # Push (Push buffered data to the application)
+    ACK = 0x10  # Acknowledgment (Acknowledge receipt of data)
+    URG = 0x20  # Urgent (Data is urgent)
+    ECE = 0x40  # ECN-Echo (Explicit Congestion Notification)
+    CWR = 0x80  # Congestion Window Reduced
+    NS = 0x100  # Nonce Sum (Experimental)
+
+    @classmethod
+    def combine_flags(cls, *flags):
+        """
+        Combine specified TCP flags into a single value.
+
+        Args:
+            *flags: Any number of FlagsEnum members to combine.
+
+        Returns:
+            A hexadecimal string representing the combined value of the specified flags.
+        """
+        combined_value = 0
+
+        for flag in flags:
+            combined_value |= flag.value
+
+        return hex(combined_value)

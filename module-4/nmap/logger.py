@@ -5,13 +5,22 @@ Any practical use of this script outside of educational or supervised demonstrat
 Author: Mihai-Andrei Neacsu
 """
 
+import argparse
 from typing import Literal
 import datetime
 
 
 LoggerLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR"]
+ShowDebugMsg = False
 
-def log_msg(msg: str, level: LoggerLevel="INFO", strftime="%Y-%m-%d %H:%M:%S.%f"):
+
+def init_logger(args: argparse.Namespace):
+    global ShowDebugMsg
+    if args.debug:
+        ShowDebugMsg = True
+
+
+def log_msg(msg: str, level: LoggerLevel = "INFO", strftime="%Y-%m-%d %H:%M:%S.%f"):
     """
     Logs formatted messages.
 
@@ -26,7 +35,11 @@ def log_msg(msg: str, level: LoggerLevel="INFO", strftime="%Y-%m-%d %H:%M:%S.%f"
         level (LoggerLevel): The type of logging msg. Default is "INFO"
         strftime (str): Format of current_time default %Y-%m-%d %H:%M:%S.%f
     """
+    global ShowDebugMsg
+    if not ShowDebugMsg and level == "DEBUG":
+        return
     assert isinstance(msg, str), "msg must be a string"
     assert level in LoggerLevel.__args__, f"level must be one of {LoggerLevel.__args__}"
+
     current_time = datetime.datetime.now().strftime(strftime)
-    print(f"[{current_time}]\t[{level}] [{msg}]")
+    print(f"[{current_time}]\t[{level}]\t[{msg}]")

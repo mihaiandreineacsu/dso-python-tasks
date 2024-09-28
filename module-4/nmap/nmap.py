@@ -7,15 +7,16 @@ Author: Mihai-Andrei Neacsu
 
 from init import init
 from logger import log_msg
+from utils import find_opened_ports
 
 
 def nmap_entrypoint():
+    args = init()
+    find_opened_ports(args)
+
+
+if __name__ == "__main__":
     try:
-        args = init()
+        nmap_entrypoint()
     except Exception as e:
         log_msg(f"{e}", "ERROR")
-
-
-
-if __name__ == '__main__':
-    nmap_entrypoint()
