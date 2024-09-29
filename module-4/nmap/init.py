@@ -125,7 +125,8 @@ def init() -> argparse.Namespace:
         -a --address: (str) IP- or DNS-Address
         -d --debug: (bool) Prints debug logs
 
-    Usage examples: TBD
+    Usage examples:
+        $python nmap.py -p your-port -a your-domain.com
     """
     parser = argparse.ArgumentParser(description="Nmap Clone")
 
