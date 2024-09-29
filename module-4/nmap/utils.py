@@ -72,6 +72,7 @@ def scan_port(dst_ip: str, dst_port: int, os_scan: bool = False):
         dst_port (int): The destination port number to send the TCP packet to.
     """
     is_open = is_port_opened(dst_ip, dst_port)
+    log_msg(f"Host {dst_ip} Port {dst_port}: Open")
     if is_open and os_scan:
         os_info = os_fingerprint(dst_ip, dst_port)
         if os_info["OS"]:
