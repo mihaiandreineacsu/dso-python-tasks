@@ -56,7 +56,7 @@ This lightweight implementation covers the following features/options:
 - [logger.py](./logger.py): Logs formatted messages.
 - [requirements.txt](./requirements.txt): Contains dependencies.
 
-## Getting started
+## Getting Started
 
 ### Installation
 
@@ -72,7 +72,7 @@ venv/Scripts/activate
 pip install -r requirements.txt
 ```
 
-### Usage examples
+### Usage Examples
 
 ```powershell
 # Dictionary attack (Direct input of target hash)
@@ -107,7 +107,7 @@ python hashcat `
 > [!NOTE]
 > `--hash` and `--hashfile` are mutually exclusive, and one must be provided.
 
-### Prove of concept
+### Prove of Concept
 
 The following examples use Git Bash shell to demonstrate the `hashcat` usage.
 
