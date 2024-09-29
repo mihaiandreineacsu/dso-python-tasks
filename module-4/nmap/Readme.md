@@ -1,12 +1,11 @@
 # My `nmap clone` tool
 
-This is my own implementation of the `nmap` tool.
-Can be used to scan an IP- or DNS-Address for opened ports.
+This is my own implementation of the `nmap` tool, used to scan an IP or DNS address for open ports and identify the running applications on those ports.
 
-This is a lightweight implementation that covers the following features/options:
+This lightweight implementation covers the following features/options:
 
-- Finds open ports using various TCP connections.
-- For the first 100 ports scans finds the running application type.
+- Find open ports using various TCP scan techniques.
+- For the first 100 ports, identify the type of running application.
 
 ## Table of content
 
@@ -14,139 +13,136 @@ This is a lightweight implementation that covers the following features/options:
 - [Dependencies](#dependencies)
 - [Command-line arguments](#command-line-arguments)
 - [Structure](#structure)
-- [Getting started](#getting-started)
+- [Getting Started](#getting-started)
 - [Installation](#installation)
-- [Usage examples](#usage-examples)
-- [Prove of concept](#prove-of-concept)
+- [Usage Examples](#usage-examples)
+- [Prove of Concept](#prove-of-concept)
 
 ## Technologies
 
 - Windows 11
-- Python 3.10.11 (tags/v3.10.11:7d4cc5a, Apr  5 2023, 00:38:17) [MSC v.1929 64 bit (AMD64)] on win32
-- venv (python virtual environment)
+- Python 3.10.11
+- `venv` (python virtual environment)
 - Docker (optionally for prove of concept)
 
 ## Dependencies
 
-- scapy==2.5.0: used to perform various tcp scans technics
+- `scapy==2.5.0`: Used to perform various TCP scan techniques.
 
 ## Command-line arguments
 
 | Name | Shortname | Description | Default | Type | Mandatory |
 | :--- | :--- | :--- | :---: | :---: | :---: |
-| `--port` | `-p` | Port Range | | str | x |
-| `--address` | `-a` | Server as IP-Address or DNS name to connect | | str | x |
-| `--debug` | `-d` | Flag to print debug level prints | | bool | |
+| `--port` | `-p` | Port range to scan | | str | x |
+| `--address` | `-a` | Server IP address or DNS name to scan | | str | x |
+| `--debug` | `-d` | Enable debug-level logging for more output detail | | bool | |
 
 ## Structure
 
-- [enums.py](./enums.py): TCP Flags Enums.
+- [enums.py](./enums.py): Contains TCP flag enums.
 - [init.py](./init.py): Validates and initializes the command-line arguments.
-- [literals.py](./literals.py): Defines Literals for each TCP Scan Technic.
-- [logger.py](./logger.py): Contains logging function used across nmap to log messages.
-- [nmap.py](./nmap.py): Main file to run and pass command-line arguments.
-- [scans.py](./scans.py): Definitions of various TCP Scans Technics.
-- [scapy_utils.py](./scapy_utils.py): Wrapper functions that use scapy.
-- [utils.py](./utils.py): Core functions of nmap.
-- [requirements.txt](./requirements.txt): contains dependencies.
-- [scan_application.py](./scan_application.py): Scans for application listing on a given address and port.
-- [demo_webapp/](./demo_webapp/): Used in prove of concept.
-- [demo_sshapp/](./demo_sshapp/): Used in prove of concept.
+- [literals.py](./literals.py): Defines literals for each TCP scan technique.
+- [logger.py](./logger.py): Contains the logging functionality for the tool.
+- [nmap.py](./nmap.py): Main file to run the tool and pass command-line arguments.
+- [scans.py](./scans.py): Contains definitions of various TCP scan techniques.
+- [scapy_utils.py](./scapy_utils.py): Wrapper functions that utilize Scapy.
+- [utils.py](./utils.py): Core functions of the nmap clone tool.
+- [requirements.txt](./requirements.txt): Contains dependencies.
+- [scan_application.py](./scan_application.py): Scans for the application running on a given address and port.
+- [demo_webapp/](./demo_webapp/): Used in the proof of concept.
+- [demo_sshapp/](./demo_sshapp/): Used in the proof of concept.
 
-## Getting started
+## Getting Started
 
 ### Installation
 
 ```powershell
-# Create and activate python virtual environment
+# Create and activate the Python virtual environment
 python -m venv venv
-venv/Scripts/activate
-
-# Activate python environment
 ./venv/Scripts/activate
 
 # Install dependencies
 pip install -r requirements.txt
 ```
 
-### Usage examples
+### Usage Examples
 
 ```powershell
-# Start hydra using defaults
+# Scan a specific port range on an address
 python nmap.py `
-    -p <port-range> `   # port range: 80, 0-2222, -
-    -a localhost `      # address: 123.45.67.89, your-domain.com
-    -d                  # if given more logs are printed
+    -p <port-range> `   # Port range: 80, 0-2222, or just -
+    -a localhost `      # Address: 127.0.0.1, 123.45.67.89, your-domain.com
+    -d                  # Enable debug output (optional)
 ```
 
-This will scan the address's given ports if opened and for first 100 will scan the application type.
+This scans the specified ports on the address and, for the first 100 ports, attempts to identify the running application.
 
-### Prove of concept
+### Prove of Concept
 
-1. Build and run the demo apps Docker images.
+1. Build and run the demo app Docker images.
 
     ```powershell
-    # Open a new terminal in the root of nmap locations.
+    # In a terminal, navigate to the root of the nmap clone project.
 
-    # Navigate to demo_webapp folder.
+    # Navigate to the demo_webapp folder.
     cd demo_webapp
 
-    # Build demo webapp image.
-    docker build demo_webapp .
+    # Build the demo web app Docker image.
+    docker build -t demo_webapp .
 
-    # Run demo webapp image.
+    # Run the demo web app image.
     docker run -it --rm `
         -p 8080:80 `
         --name demo_webapp `
         demo_webapp
 
-    # Open a new terminal in the root of nmap locations.
-
-    # Navigate to demo_sshapp folder.
+    # Open another terminal and navigate to the demo_sshapp folder.
     cd demo_sshapp
 
-    # Build demo webapp image.
-    docker build demo_sshapp .
+    # Build the demo SSH app Docker image.
+    docker build -t demo_sshapp .
 
-    # Run demo webapp image.
+    # Run the demo SSH app image.
     docker run -it --rm `
         -p 2222:22 `
         --name demo_sshapp `
         demo_sshapp
+
     ```
 
-1. Scan demo apps using nmap
+1. Scan the demo apps using the nmap clone tool.
 
     ```powershell
-    # Open a new terminal in the root of nmap locations.
+    # In a terminal, navigate to the root of the nmap clone project.
 
-    # Scan the demo webapp.
+    # Scan the demo web app on port 8080.
     python nmap.py `
         -p 8080 `
         -a 127.0.0.1
 
-    # Output Example
+    # Example Output:
     [2024.09.29 09:07:20]   [INFO]  [Initializing Nmap Clone...]
-    [2024.09.29 09:07:20]   [INFO]  [Finding opened ports ...]
+    [2024.09.29 09:07:20]   [INFO]  [Finding open ports ...]
     [2024.09.29 09:07:22]   [INFO]  [Host 127.0.0.1 Port 8080: Open]
-    [2024.09.29 09:07:22]   [INFO]  [Scanning APPLICATION...]
-    [2024.09.29 09:07:27]   [WARNING]       [Timeout on port 8080, retrying... (1 retries left)]
-    [2024.09.29 09:07:27]   [INFO]  [Scanning APPLICATION...]
-    [2024.09.29 09:07:29]   [INFO]  [APPLICATION: Nginx Web Server]
+    [2024.09.29 09:07:22]   [INFO]  [Scanning application...]
+    [2024.09.29 09:07:27]   [WARNING]  [Timeout on port 8080, retrying... (1 retry left)]
+    [2024.09.29 09:07:27]   [INFO]  [Scanning application...]
+    [2024.09.29 09:07:29]   [INFO]  [Application: Nginx Web Server]
     [2024.09.29 09:07:29]   [INFO]  [Scanning OS...]
     [2024.09.29 09:07:31]   [INFO]  [OS: Windows (Unknown OS)]
 
-    # Scan the demo sshapp
+    # Scan the demo SSH app on port 2222.
     python nmap.py `
         -p 2222 `
         -a 127.0.0.1
 
-    # Output Example
+    # Example Output:
     [2024.09.29 09:10:02]   [INFO]  [Initializing Nmap Clone...]
-    [2024.09.29 09:10:02]   [INFO]  [Finding opened ports ...]
+    [2024.09.29 09:10:02]   [INFO]  [Finding open ports ...]
     [2024.09.29 09:10:04]   [INFO]  [Host 127.0.0.1 Port 2222: Open]
-    [2024.09.29 09:10:04]   [INFO]  [Scanning APPLICATION...]
-    [2024.09.29 09:10:06]   [INFO]  [APPLICATION: OpenSSH Server]
+    [2024.09.29 09:10:04]   [INFO]  [Scanning application...]
+    [2024.09.29 09:10:06]   [INFO]  [Application: OpenSSH Server]
     [2024.09.29 09:10:06]   [INFO]  [Scanning OS...]
     [2024.09.29 09:10:06]   [INFO]  [OS: Windows (Unknown OS)]
+
     ```
