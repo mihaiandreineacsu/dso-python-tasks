@@ -50,3 +50,38 @@ def send_tcp_package(
     packet = IP(dst=dst_ip) / TCP(sport=src_port, dport=dst_port, flags=flags)
     response = sr1(packet, timeout=2, verbose=0)
     return response, src_port
+
+
+def send_package(dst_ip, dst_port):
+
+    # Set up server details
+    target_ip = dst_ip
+    target_port = dst_port
+    source_port = RandShort()  # Random source port
+    # Create TCP SYN packet
+    syn_packet = IP(dst=target_ip) / TCP(
+        sport=source_port, dport=target_port, flags="S"
+    )
+    syn_ack_response = sr1(syn_packet)
+    # Create ACK packet to complete handshake
+    ack_packet = IP(dst=target_ip) / TCP(
+        sport=syn_ack_response[TCP].dport,
+        dport=target_port,
+        flags="A",
+        seq=syn_ack_response.ack,
+        ack=syn_ack_response.seq + 1,
+    )
+    send(ack_packet)
+    # Send some actual data
+    data_packet = (
+        IP(dst=target_ip)
+        / TCP(
+            sport=syn_ack_response[TCP].dport,
+            dport=target_port,
+            flags="PA",
+            seq=syn_ack_response.ack,
+            ack=syn_ack_response.seq + 1,
+        )
+        / "Hello from Scapy!"
+    )
+    send(data_packet)

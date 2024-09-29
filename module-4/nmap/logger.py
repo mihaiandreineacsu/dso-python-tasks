@@ -20,7 +20,7 @@ def init_logger(args: argparse.Namespace):
         ShowDebugMsg = True
 
 
-def log_msg(msg: str, level: LoggerLevel = "INFO", strftime="%Y-%m-%d %H:%M:%S.%f"):
+def log_msg(msg: str, level: LoggerLevel = "INFO", strftime="%Y.%m.%d %H:%M:%S"):
     """
     Logs formatted messages.
 

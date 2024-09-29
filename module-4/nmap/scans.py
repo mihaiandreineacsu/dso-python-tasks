@@ -37,10 +37,11 @@ def ping_scan(
 
     if response.haslayer(ICMP):
         icmp_layer = response.getlayer(ICMP)
-
+        log_msg(f"ICMP Layer type: {icmp_layer.type}", "DEBUG")
         if icmp_layer.type == 0:  # ICMP Echo Reply received
             log_msg(f"Host {dst_ip}: Alive", "DEBUG")
             return "Alive"
+
     log_msg(f"Host {dst_ip}: Unexpected Response", "DEBUG")
     return "Unexpected Response"
 
@@ -64,13 +65,16 @@ def tcp_ack_scan(dst_ip: str, dst_port: int) -> TcpAckScanResult:
 
     if response.haslayer(TCP):
         tcp_layer = response.getlayer(TCP)
-
+        log_msg(f"TCP Layer flags: {tcp_layer.flags}", "DEBUG")
         if tcp_layer.flags == 0x04:  # RST received, port is unfiltered
             log_msg(f"Host {dst_ip} Port {dst_port}: Unfiltered", "DEBUG")
             return "Unfiltered"
 
     if response.haslayer(ICMP):
         icmp_layer = response.getlayer(ICMP)
+        log_msg(f"ICMP Layer types: {tcp_layer.types}", "DEBUG")
+        log_msg(f"ICMP Layer code: {tcp_layer.code}", "DEBUG")
+
         if int(icmp_layer.type) == 3 and int(icmp_layer.code) in [1, 2, 3, 9, 10, 13]:
             log_msg(f"Host {dst_ip} Port {dst_port}: Filtered", "DEBUG")
             return "Filtered"
@@ -95,18 +99,23 @@ def half_open_scan(dst_ip: str, dst_port: int) -> HalfOpenScanResult:
     if not response:
         log_msg(f"Host {dst_ip} Port {dst_port}: Filtered or Dropped", "DEBUG")
         return "Filtered or Dropped"
+
     if not response.haslayer(TCP):
         log_msg(f"Host {dst_ip} Port {dst_port}: Unexpected TCP Flags", "DEBUG")
         return "Unexpected TCP Flags"
+
     log_msg(f"TCP Layer flags: {response.getlayer(TCP).flags}", "DEBUG")
+
     if response.getlayer(TCP).flags == 0x14:  # RST+ACK
         log_msg(f"Host {dst_ip} Port {dst_port}: Closed", "DEBUG")
         return "Closed"
+
     if response.getlayer(TCP).flags == 0x12:  # SYN+ACK
         log_msg(f"Host {dst_ip} Port {dst_port}: Open")
         time.sleep(2)
         send_rst(dst_ip, dst_port, src_port)
         return "Open"
+
     log_msg(f"Host {dst_ip} Port {dst_port}: Filtered or Unexpected Response", "DEBUG")
     return "Filtered or Unexpected Response"
 
@@ -126,19 +135,23 @@ def tcp_window_scan(dst_ip: str, dst_port: int) -> TcpWindowScanResult:
 
     if response is None:
         log_msg(f"Host {dst_ip} Port {dst_port}: Filtered or No response", "DEBUG")
-        return "Filtered or No response"  # No response indicates the port might be filtered or dropped
+        return "Filtered or No Response"  # No response indicates the port might be filtered or dropped
 
     if response.haslayer(TCP):
         tcp_layer = response.getlayer(TCP)
+        log_msg(f"TCP Layer flags: {tcp_layer.flags}", "DEBUG")
 
         if tcp_layer.flags == 0x04:  # RST received
-            log_msg(f"tcp_layer.window {tcp_layer.window}", "DEBUG")
+            log_msg(f"TCP Layer window: {tcp_layer.window}", "DEBUG")
+
             if tcp_layer.window > 0:  # Non-zero window size
                 log_msg(f"Host {dst_ip} Port {dst_port}: Open")
                 return "Open"
+
             else:  # Zero window size
                 log_msg(f"Host {dst_ip} Port {dst_port}: Closed", "DEBUG")
                 return "Closed"
+
     log_msg(f"Host {dst_ip} Port {dst_port}: Filtered or Unexpected Response", "DEBUG")
     return "Filtered or Unexpected Response"
 
@@ -162,6 +175,7 @@ def tcp_connect_scan(dst_ip: str, dst_port: int) -> TcpConnectScanResult:
 
     if response.haslayer(TCP):
         tcp_layer = response.getlayer(TCP)
+        log_msg(f"TCP Layer flags: {tcp_layer.flags}", "DEBUG")
 
         if tcp_layer.flags == 0x12:  # SYN-ACK received, port is open
             # Send an ACK packet to complete the handshake
@@ -214,6 +228,7 @@ def tcp_null_scan(dst_ip: str, dst_port: int) -> TcpNullScanResult:
 
     if response.haslayer(TCP):
         tcp_layer = response.getlayer(TCP)
+        log_msg(f"TCP Layer flags: {tcp_layer.flags}", "DEBUG")
 
         if tcp_layer.flags == 0x14:  # RST-ACK received, port is closed
             log_msg(f"Host {dst_ip} Port {dst_port}: Closed", "DEBUG")
@@ -242,6 +257,7 @@ def tcp_xmas_scan(dst_ip: str, dst_port: int) -> TcpXmasScanResult:
 
     if response.haslayer(TCP):
         tcp_layer = response.getlayer(TCP)
+        log_msg(f"TCP Layer flags: {tcp_layer.flags}", "DEBUG")
 
         if tcp_layer.flags == 0x14:  # RST-ACK received, port is closed
             log_msg(f"Host {dst_ip} Port {dst_port}: Closed", "DEBUG")
@@ -264,13 +280,13 @@ def tcp_fin_scan(dst_ip: str, dst_port: int) -> TcpFinScan:
     """
     response, src_port = send_tcp_package(dst_ip, dst_port, flags="F")
 
-    # Step 2: Analyze the response
     if response is None:
         log_msg(f"Host {dst_ip} Port {dst_port}: Open or Filtered", "DEBUG")
         return "Open or Filtered"
 
     if response.haslayer(TCP):
         tcp_layer = response.getlayer(TCP)
+        log_msg(f"TCP Layer flags: {tcp_layer.flags}", "DEBUG")
 
         if tcp_layer.flags == 0x14:  # RST-ACK received, port is closed
             log_msg(f"Host {dst_ip} Port {dst_port}: Closed", "DEBUG")
@@ -291,13 +307,13 @@ def os_fingerprint(dst_ip: str, dst_port: int) -> dict:
     Returns:
         dict: A dictionary containing the inferred OS characteristics.
     """
+    log_msg("Scanning OS...")
     os_info = {}
 
     # Step 1: Send a SYN packet to the target IP and port
     syn_packet = IP(dst=dst_ip) / TCP(dport=dst_port, flags="S")
     response = sr1(syn_packet, timeout=2, verbose=0)
 
-    # Step 2: Analyze the response
     if response is None:
         os_info["OS"] = "No response (Host might be down or filtered)"
         return os_info
@@ -329,4 +345,5 @@ def os_fingerprint(dst_ip: str, dst_port: int) -> dict:
             os_info["OS"] += " (Windows 7/Server 2008 R2)"
         else:
             os_info["OS"] += " (Unknown OS)"
+
     return os_info

@@ -19,6 +19,7 @@ from scans import (
     tcp_window_scan,
     tcp_xmas_scan,
 )
+from scan_application import scan_application
 
 
 def is_port_opened(dst_ip: str, dst_port: int) -> bool:
@@ -70,13 +71,14 @@ def scan_port(dst_ip: str, dst_port: int, os_scan: bool = False):
     Args:
         dst_ip (str): The destination IP address to send the TCP packet to.
         dst_port (int): The destination port number to send the TCP packet to.
+        os_scan (bool): If a os fingerprint and application scan should run for a opened port.
     """
     is_open = is_port_opened(dst_ip, dst_port)
-    log_msg(f"Host {dst_ip} Port {dst_port}: Open")
     if is_open and os_scan:
+        scan_application(dst_ip, dst_port)
         os_info = os_fingerprint(dst_ip, dst_port)
         if os_info["OS"]:
-            log_msg(f"OS: {os_info['OS']}")
+            log_msg(f"Port {dst_port} runs OS: {os_info['OS']}")
 
 
 def find_opened_ports(args: argparse.Namespace):

@@ -37,8 +37,6 @@ class RangeEnum(NmapEnum[int], Enum):
 
 
 class FlagsEnum(NmapEnum[int], Enum):
-    MAX_PORT = 65535
-    MIN_PORT = 0
     FIN = 0x01  # Finish (Close the connection)
     SYN = 0x02  # Synchronize (Initiate a connection)
     RST = 0x04  # Reset (Abort the connection)
