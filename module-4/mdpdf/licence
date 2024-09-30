@@ -1,0 +1,11 @@
+Educational Use License
+
+This project contains the source code for an implementation by Mihai-Andrei Neacsu. This tool can be used to extract metadata and header information from a PDF file and save it to a CSV file.
+
+This code is provided under the following terms:
+
+1. Educational Purpose: This code is intended solely for educational purposes as an exercise in imitation.
+2. Restricted Use: Any practical use of this code outside of educational or supervised demonstration scenarios is strictly prohibited.
+3. No Warranty: This code is provided "as is", without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose, and noninfringement. In no event shall the authors be liable for any claim, damages, or other liability, whether in an action of contract, tort, or otherwise, arising from, out of, or in connection with the software or the use or other dealings in the software.
+
+Author: Mihai-Andrei Neacsu
