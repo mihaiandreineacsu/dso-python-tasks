@@ -70,12 +70,12 @@ def init() -> argparse.Namespace:
         --debug: (bool)
 
     Usage examples:
-        Using PDF file name as CSV file name: $python mdpdf.py -f example.pdf -d outputs
-        Using name argument value as CSV file name: $python mdpdf.py -f example.pdf -d outputs -n my_csv
+        Using PDF file name as CSV file name: $python metascan.py -f example.pdf -d outputs
+        Using name argument value as CSV file name: $python metascan.py -f example.pdf -d outputs -n my_csv
     """
-    log_msg("Initializing MDPDF...")
+    log_msg("Initializing metascan...")
     parser = argparse.ArgumentParser(
-        description="MDPDF reads Meta-Data from a given PDF file and outputs them in CSV file at a given destination."
+        description="Metascan reads Meta-Data from a given PDF file and outputs them in CSV file."
     )
     parser.add_argument(
         "-f", "--file", required=True, type=is_pdf_file, help="PDF file input location"

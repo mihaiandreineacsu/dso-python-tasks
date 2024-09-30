@@ -1,4 +1,4 @@
-# My `mdpdf` Meta-Data Analytic Tool
+# My `metascan` Meta-Data Analytic Tool
 
 This project automatically reads metadata from PDF files and writes them to a CSV file.
 
@@ -39,7 +39,7 @@ This lightweight implementation covers the following features/options:
 
 - [init.py](./init.py): Validates and initializes the command-line arguments.
 - [logger.py](./logger.py): Contains logging functions used to log messages.
-- [mdpdf.py](./mdpdf.py): Main file to run and pass command-line arguments.
+- [metascan.py](./metascan.py): Main file to run and pass command-line arguments.
 - [utils.py](./utils.py): Helper functions to handle the passed command-line arguments.
 - [requirements.txt](./requirements.txt): Contains dependencies.
 
@@ -59,8 +59,8 @@ pip install -r requirements.txt
 ### Usage Examples
 
 ```powershell
-# Start the mdpdf script
-python mdpdf.py `
+# Start the metascan script
+python metascan.py `
     -f <path_to/your_file.pdf> `    # e.g., example.pdf
     -d <path_to_output_directory/> ` # Output directory for the CSV file
     -n <name_of_csv_file> `         # Optional: If omitted, CSV file will be named after the PDF file

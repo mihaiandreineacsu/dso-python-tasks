@@ -10,7 +10,7 @@ from logger import log_msg
 from utils import extract_metadata, output_doc_info
 
 
-def mdpdf_entrypoint():
+def metascan_entrypoint():
     args = init()
     doc_info = extract_metadata(args.file)
     output_doc_info(doc_info, args.destination, args.name)
@@ -18,6 +18,6 @@ def mdpdf_entrypoint():
 
 if __name__ == "__main__":
     try:
-        mdpdf_entrypoint()
+        metascan_entrypoint()
     except Exception as e:
         log_msg(f"{e}", "ERROR")
