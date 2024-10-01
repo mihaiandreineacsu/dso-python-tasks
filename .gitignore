@@ -10,7 +10,9 @@ __pycache__
 # environment variables
 *.env*
 
-.vscode/*
+**/.vscode/*
 
 **/*.csv
 **/*.pdf
+
+**/downloads/*

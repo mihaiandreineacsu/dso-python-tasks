@@ -5,19 +5,25 @@ Any practical use of this script outside of educational or supervised demonstrat
 Author: Mihai-Andrei Neacsu
 """
 
+import traceback
 from init import init
 from logger import log_msg
-from utils import extract_metadata, output_doc_info
+from utils import extract_metadata, output_doc_info, download_pdfs
 
 
 def metascan_entrypoint():
     args = init()
-    doc_info = extract_metadata(args.file)
-    output_doc_info(doc_info, args.destination, args.name)
+    if args.url:
+        files = download_pdfs(args.url, args.destination)
+    if args.file:
+        files = [args.file]
+    for file in files:
+        doc_info = extract_metadata(file)
+        output_doc_info(doc_info, args.destination, args.name)
 
 
 if __name__ == "__main__":
     try:
         metascan_entrypoint()
-    except Exception as e:
-        log_msg(f"{e}", "ERROR")
+    except Exception:
+        log_msg(traceback.format_exc(), "ERROR")

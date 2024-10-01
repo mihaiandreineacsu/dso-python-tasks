@@ -38,48 +38,30 @@ def is_pdf_file(file_name: str) -> str:
     return file_name
 
 
-def resolve_name(args: argparse.Namespace):
-    """
-    Resolve name argument.
-    If none is given the name of the file argument will be given.
-
-    Args:
-        args (argparse.Namespace) : Command Line Arguments
-    """
-
-    if not args.name:
-        # Extract just the file name (without path and extension) from args.file
-        args.name = os.path.splitext(os.path.basename(args.file))[0]
-
-
-def validate_args(args: argparse.Namespace):
-    """
-    Validates Command-Line arguments.
-    """
-    resolve_name(args)
-
-
 def init() -> argparse.Namespace:
     """
     Initializes Command-line arguments.
 
     Accepted arguments:
-        -f --filename: (str) required,
+        -u --url: (str), mutually exclusive
+        -f --filename: (str), mutually exclusive
         -d --destination: (str) required,
-        -n --name: (str)
+        -n --name: (str) required,
         --debug: (bool)
 
     Usage examples:
-        Using PDF file name as CSV file name: $python metascan.py -f example.pdf -d outputs
-        Using name argument value as CSV file name: $python metascan.py -f example.pdf -d outputs -n my_csv
+        PDF as input: $python metascan.py -f example.pdf -d outputs -n my_csv
+        URL as input: $python metascan.py -u your-domain.com -d outputs -n my_csv
     """
     log_msg("Initializing metascan...")
     parser = argparse.ArgumentParser(
         description="Metascan reads Meta-Data from a given PDF file and outputs them in CSV file."
     )
-    parser.add_argument(
-        "-f", "--file", required=True, type=is_pdf_file, help="PDF file input location"
+    group = parser.add_mutually_exclusive_group(required=True)
+    group.add_argument(
+        "-f", "--file", type=is_pdf_file, help="PDF file input location."
     )
+    group.add_argument("-u", "--url", type=str, help="URL to scan for PDF files.")
     parser.add_argument(
         "-d",
         "--destination",
@@ -87,10 +69,11 @@ def init() -> argparse.Namespace:
         type=str,
         help="CSV file output destination",
     )
-    parser.add_argument("-n", "--name", type=str, help="CSV file output name")
-    parser.add_argument("--debug", action="store_true", help="Prints debug logs")
+    parser.add_argument(
+        "-n", "--name", required=True, type=str, help="CSV file output name."
+    )
+    parser.add_argument("--debug", action="store_true", help="Prints debug logs.")
 
     args = parser.parse_args()
     init_logger(args)
-    validate_args(args)
     return args
