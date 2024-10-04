@@ -16,3 +16,9 @@ __pycache__
 **/*.pdf
 
 **/downloads/*
+
+**/dumps/*
+
+**/possible-pwds/*
+
+**/*.sln

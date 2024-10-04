@@ -7,7 +7,7 @@ This repository contains the code for all python tasks of the DevSecOps course.
 ## Contents
 
 - Module 3 - Python Fundamentals
-- Module 4 - Pentesting Tools in Python
+- Module 5 - Pen-Testing Tools in Python
 
 ## Module 3
 
