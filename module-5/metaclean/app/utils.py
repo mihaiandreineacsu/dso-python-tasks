@@ -5,7 +5,6 @@ Any practical use of this script outside of educational or supervised demonstrat
 Author: Mihai-Andrei Neacsu
 """
 
-
 import argparse
 import os
 import subprocess
@@ -30,7 +29,13 @@ def log_metadata(args: argparse.Namespace):
         log_msg(f"{result.stdout}", "DEBUG")
 
 
-def run_subprocess(args: str | bytes | os.PathLike, on_error_message: str=None, shell: bool=False) -> subprocess.CompletedProcess[str]:
+def run_subprocess(
+    args: str | bytes | os.PathLike,
+    on_error_message: str = None,
+    shell: bool = False,
+    cwd: str = None,
+    encoding: str = None,
+) -> subprocess.CompletedProcess[str]:
     """
     Wrapper function that calls subprocess.run with given arguments.
 
@@ -38,6 +43,8 @@ def run_subprocess(args: str | bytes | os.PathLike, on_error_message: str=None, 
         args (tuple) : Arguments to pass on subprocess.run.
         on_error_message (str) : Custom error message to log when subprocess fails.
         shell (bool) : Sets the shell Flag of subprocess.run.
+        cwd (str): The directory from which to run the command. Defaults to None.
+        encoding (str): Specifies encoding for the output
 
     Raises:
         RuntimeError: When subprocess.run returns a non-zero exit code.
@@ -49,8 +56,8 @@ def run_subprocess(args: str | bytes | os.PathLike, on_error_message: str=None, 
     if shell:
         log_msg(f"Potential security risk: args {args} is runs in shell!", "WARNING")
 
-    result = subprocess.run(args, capture_output=True, text=True, shell=shell)
-    if (result.returncode != 0):
+    result = subprocess.run(args, capture_output=True, text=True, shell=shell, cwd=cwd, encoding=encoding)
+    if result.returncode != 0:
         # Log error with custom message and stderr
         if not on_error_message:
             on_error_message = str(args)
@@ -58,7 +65,7 @@ def run_subprocess(args: str | bytes | os.PathLike, on_error_message: str=None, 
     return result
 
 
-def clean_metadata(file: str) :
+def clean_metadata(file: str):
     """
     Removes Meta-Data from given file.
 

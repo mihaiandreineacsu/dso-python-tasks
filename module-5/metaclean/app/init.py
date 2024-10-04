@@ -49,12 +49,8 @@ def init() -> argparse.Namespace:
     Usage examples: $python metaclean.py -f example.pdf
     """
     log_msg("Initializing metaclean...")
-    parser = argparse.ArgumentParser(
-        description="Meta Clean removes Meta-Data from a given PDF file."
-    )
-    parser.add_argument(
-        "-f", "--file", type=is_pdf_file, help="PDF file input location."
-    )
+    parser = argparse.ArgumentParser(description="Meta Clean removes Meta-Data from a given PDF file.")
+    parser.add_argument("-f", "--file", type=is_pdf_file, help="PDF file input location.")
     parser.add_argument("--debug", action="store_true", help="Prints debug logs.")
 
     args = parser.parse_args()

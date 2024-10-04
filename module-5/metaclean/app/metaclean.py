@@ -8,7 +8,7 @@ Author: Mihai-Andrei Neacsu
 import traceback
 from init import init
 from logger import log_msg
-from utils import clean_metadata, log_metadata, run_subprocess
+from utils import clean_metadata, log_metadata
 
 
 def metaclean_entrypoint():
