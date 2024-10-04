@@ -1,3 +1,0 @@
-[submodule "module-5/keepass-exploit/app/keepass-password-dumper"]
-	path = module-5/keepass-exploit/app/keepass-password-dumper
-	url = https://github.com/mihaiandreineacsu/keepass-password-dumper.git
