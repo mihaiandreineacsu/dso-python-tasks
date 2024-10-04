@@ -26,12 +26,14 @@ This lightweight implementation covers the following features/options:
 ## Dependencies
 
 - `pypdf==5.0.1`: Used to read and extract metadata from PDF files.
-- `selenium==4.25.0`: TBD
-- `requests==2.32.3` : TBD
+- `selenium==4.25.0`: Used to scan URL Address from PDF hyperlinks.
+- `requests==2.32.3` : Used to download PDFs files.
 
 ## Command-line arguments
 
 ### Required Mutual Exclusive Group Command-line arguments
+
+These arguments cannot be used together.
 
 | Name | Shortname | Description | Default | Type | Mandatory |
 | :--- | :--- | :--- | :---: | :---: | :---: | :---: |
@@ -42,7 +44,6 @@ This lightweight implementation covers the following features/options:
 
 | Name | Shortname | Description | Default | Type | Mandatory |
 | :--- | :--- | :--- | :---: | :---: | :---: |
-| `--file` | `-f` | PDF file input path | | str | x |
 | `--destination` | `-d` | CSV file output directory | | str | x |
 | `-n` | `--name` | CSV file output name | | str | x |
 | `--debug` | | Flag to enable debug-level logging | | bool | |
@@ -126,7 +127,7 @@ This will generate a CSV file, `example.csv`, containing metadata from all downl
 
 # Run metascan
 python metascan.py `
-    -u http:localhost:8080 `  # Demo Web page URL
+    -u http://localhost:8080 `  # Demo Web page URL
     -d output `               # Destination of download PDF files from Demo Web page and CSV file output.
     -n localhost_8080         # CSV file output name.
 ```
