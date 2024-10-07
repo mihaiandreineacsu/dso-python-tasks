@@ -4,3 +4,6 @@
 [submodule "module-5/keepass-exploit/app/keepass2john"]
 	path = module-5/keepass-exploit/app/keepass2john
 	url = https://github.com/mihaiandreineacsu/keepass2john.git
+[submodule "module-5/keepass-exploit/app/KeePass-dump-py"]
+	path = module-5/keepass-exploit/app/KeePass-dump-py
+	url = https://github.com/mihaiandreineacsu/KeePass-dump-py.git
