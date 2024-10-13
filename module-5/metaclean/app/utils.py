@@ -8,6 +8,7 @@ Author: Mihai-Andrei Neacsu
 import argparse
 import os
 import subprocess
+from typing import Union
 from logger import log_msg
 
 
@@ -30,7 +31,7 @@ def log_metadata(args: argparse.Namespace):
 
 
 def run_subprocess(
-    args: str | bytes | os.PathLike,
+    args: Union[str, bytes, os.PathLike],
     on_error_message: str = None,
     shell: bool = False,
     cwd: str = None,
