@@ -7,3 +7,6 @@
 [submodule "module-5/keepass-exploit/app/keepass_dump"]
 	path = module-5/keepass-exploit/app/keepass_dump
 	url = https://github.com/mihaiandreineacsu/keepass_dump.git
+[submodule "module-5/keepass-exploit/app/keepass-dump-masterkey"]
+	path = module-5/keepass-exploit/app/keepass-dump-masterkey
+	url = https://github.com/mihaiandreineacsu/keepass-dump-masterkey.git
