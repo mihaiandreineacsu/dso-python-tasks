@@ -42,11 +42,7 @@ def retry_on_timeout(max_retries=3):
             while retries < max_retries:
                 try:
                     # Use the retry number to select a probe message
-                    probe_message = (
-                        PROB_MESSAGES[retries]
-                        if retries < len(PROB_MESSAGES)
-                        else b"\n"
-                    )
+                    probe_message = PROB_MESSAGES[retries] if retries < len(PROB_MESSAGES) else b"\n"
                     return func(dst_ip, dst_port, probe_message, *args, **kwargs)
                 except socket.timeout:
                     retries += 1
@@ -113,8 +109,6 @@ def scan_application(dst_ip: str, dst_port: str, probe_message: bytes = b"\n"):
     if detected_application:
         log_msg(f"Port {dst_port} runs: {detected_application} APPLICATION")
     else:
-        log_msg(
-            f"Could not identify the application from the banner on port {dst_port}."
-        )
+        log_msg(f"Could not identify the application from the banner on port {dst_port}.")
 
     client_socket.close()

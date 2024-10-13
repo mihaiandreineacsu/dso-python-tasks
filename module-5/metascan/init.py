@@ -58,9 +58,7 @@ def init() -> argparse.Namespace:
         description="Metascan reads Meta-Data from a given PDF file and outputs them in CSV file."
     )
     group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument(
-        "-f", "--file", type=is_pdf_file, help="PDF file input location."
-    )
+    group.add_argument("-f", "--file", type=is_pdf_file, help="PDF file input location.")
     group.add_argument("-u", "--url", type=str, help="URL to scan for PDF files.")
     parser.add_argument(
         "-d",
@@ -69,9 +67,7 @@ def init() -> argparse.Namespace:
         type=str,
         help="CSV file output destination",
     )
-    parser.add_argument(
-        "-n", "--name", required=True, type=str, help="CSV file output name."
-    )
+    parser.add_argument("-n", "--name", required=True, type=str, help="CSV file output name.")
     parser.add_argument("--debug", action="store_true", help="Prints debug logs.")
 
     args = parser.parse_args()

@@ -24,9 +24,7 @@ def validate_min_max(min_val: int, max_val: int) -> tuple[int, int]:
         argparse.ArgumentTypeError: If validation fails.
     """
     if min_val < 1 or max_val > 10 or min_val > max_val:
-        raise argparse.ArgumentTypeError(
-            "Min must be >= 1, max must be <= 10, and min must be <= max."
-        )
+        raise argparse.ArgumentTypeError("Min must be >= 1, max must be <= 10, and min must be <= max.")
     return min_val, max_val
 
 
@@ -104,9 +102,7 @@ def get_words(args: argparse.Namespace) -> list[str]:
     return words or []
 
 
-def establish_connection(
-    args: argparse.Namespace, password: str
-) -> paramiko.SSHClient | None:
+def establish_connection(args: argparse.Namespace, password: str) -> paramiko.SSHClient | None:
     """
     Establishes an ssh connection to <args.username>@<args.server>
 
@@ -177,9 +173,7 @@ def exec_connections(args: argparse.Namespace):
         ssh_client = establish_connection(args, word)
         if not ssh_client:
             continue
-        log_msg(
-            f"Connection {index} established! Password -> {word}"
-        )
+        log_msg(f"Connection {index} established! Password -> {word}")
         run_command(ssh_client, "whoami")
         log_msg("Closing SSH Client...")
         ssh_client.close()

@@ -29,9 +29,7 @@ def init() -> argparse.Namespace:
     log_msg("Initializing Hydra Clone...")
     parser = argparse.ArgumentParser(description="Hydra Clone")
 
-    parser.add_argument(
-        "-u", "--username", required=True, type=str, help="Username to connect"
-    )
+    parser.add_argument("-u", "--username", required=True, type=str, help="Username to connect")
     parser.add_argument(
         "-s",
         "--server",

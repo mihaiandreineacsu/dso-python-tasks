@@ -4,7 +4,6 @@ from init import init
 
 
 class TestHydraCLI(unittest.TestCase):
-
     @patch(
         "sys.argv",
         ["hydra.py", "-u", "username", "-s", "servername", "-p", "22", "-w", "dictionary.txt"],

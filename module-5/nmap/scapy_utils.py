@@ -22,9 +22,7 @@ def send_rst(dst_ip: str, dst_port: int, src_port: RandShort):
     )
 
 
-def send_tcp_package(
-    dst_ip: str, dst_port: int, flags: str, src_port=None
-) -> tuple[Any, RandShort | int]:
+def send_tcp_package(dst_ip: str, dst_port: int, flags: str, src_port=None) -> tuple[Any, RandShort | int]:
     """
     Sends a TCP packet to a specified destination and returns the response and source port.
 
@@ -59,9 +57,7 @@ def send_package(dst_ip, dst_port):
     target_port = dst_port
     source_port = RandShort()  # Random source port
     # Create TCP SYN packet
-    syn_packet = IP(dst=target_ip) / TCP(
-        sport=source_port, dport=target_port, flags="S"
-    )
+    syn_packet = IP(dst=target_ip) / TCP(sport=source_port, dport=target_port, flags="S")
     syn_ack_response = sr1(syn_packet)
     # Create ACK packet to complete handshake
     ack_packet = IP(dst=target_ip) / TCP(

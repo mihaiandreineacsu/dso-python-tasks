@@ -33,9 +33,7 @@ def init() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Hashcat Clone", add_help=False)
 
     # Manually add help argument
-    parser.add_argument(
-        "-help", "--help", action="help", help="Show this help message and exit"
-    )
+    parser.add_argument("-help", "--help", action="help", help="Show this help message and exit")
     parser.add_argument(
         "-m",
         "--mode",
@@ -54,9 +52,7 @@ def init() -> argparse.Namespace:
         default=AttackModes.BRUTE_FORCE_ATTACK,
         help="Attack modes Brute-Force Attack (0) and Dictionary Attack (1). Default Brute-Force Attack (0)",
     )
-    parser.add_argument(
-        "-d", "--dictionary", type=str, help="Dictionary file for Dictionary attack"
-    )
+    parser.add_argument("-d", "--dictionary", type=str, help="Dictionary file for Dictionary attack")
     parser.add_argument(
         "-c",
         "--characterset",

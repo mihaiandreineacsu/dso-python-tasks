@@ -43,9 +43,7 @@ def validate_port_range(
     return match.groups()
 
 
-def validate_ports_list(
-    start: str, end: str, single_port: str, hyphen: str, ports: str
-) -> list[int]:
+def validate_ports_list(start: str, end: str, single_port: str, hyphen: str, ports: str) -> list[int]:
     """
     Validates ports list by given start and end ports or single port or hyphen:
         - If hyphen is defined returns list range of ports from 0 to (MAX_PORT + 1) value.
@@ -85,9 +83,7 @@ def validate_ports_list(
     elif start and end:
         start, end = int(start), int(end)
         if start > end:
-            raise ValueError(
-                f"Invalid port range: Start port {start} can be greater then end port {end}"
-            )
+            raise ValueError(f"Invalid port range: Start port {start} can be greater then end port {end}")
         if end > MAX_PORT:
             raise ValueError(f"Invalid port range: {end}. Max allowed is {MAX_PORT}.")
         ports_list = list(range(start, end + 1))
@@ -130,12 +126,8 @@ def init() -> argparse.Namespace:
     """
     parser = argparse.ArgumentParser(description="Nmap Clone")
 
-    parser.add_argument(
-        "-p", "--ports", required=True, type=str, help="Ports range 0-65535"
-    )
-    parser.add_argument(
-        "-a", "--address", required=True, type=str, help="IP- or DNS-Address"
-    )
+    parser.add_argument("-p", "--ports", required=True, type=str, help="Ports range 0-65535")
+    parser.add_argument("-a", "--address", required=True, type=str, help="IP- or DNS-Address")
     parser.add_argument("-d", "--debug", action="store_true", help="Prints debug logs")
 
     args = parser.parse_args()

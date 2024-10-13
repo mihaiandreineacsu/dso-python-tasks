@@ -81,13 +81,9 @@ def extract_metadata(file: str) -> dict[str, str]:
             "Author": metadata.author if metadata.author else "Unknown",
             "Creator": metadata.creator if metadata.creator else "Unknown",
             "Created": metadata.creation_date if metadata.creation_date else "Unknown",
-            "Modified": (
-                metadata.modification_date if metadata.modification_date else "Unknown"
-            ),
+            "Modified": (metadata.modification_date if metadata.modification_date else "Unknown"),
             "Subject": metadata.subject if metadata.subject else "Unknown",
-            "Keywords": (
-                metadata.keywords if hasattr(metadata, "keywords") else "Unknown"
-            ),  # Safely handle 'Keywords'
+            "Keywords": (metadata.keywords if hasattr(metadata, "keywords") else "Unknown"),  # Safely handle 'Keywords'
             "Description": (
                 metadata.description if hasattr(metadata, "description") else "Unknown"
             ),  # Safely handle 'Description'

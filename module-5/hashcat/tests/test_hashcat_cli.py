@@ -5,7 +5,6 @@ from enums import HashModes, AttackModes
 
 
 class TestHashcatCLI(unittest.TestCase):
-
     @patch(
         "sys.argv",
         ["hashcat.py", "-m", "0", "-a", "1", "-d", "dictionary.txt", "-h", "somehash"],
