@@ -20,8 +20,4 @@ __pycache__
 **/dumps/*
 
 **/possible-pwds/*
-**/keepass-hashes/*
 **/generated-pwds/*
-**/output/*
-**/input/*
-**/*.sln
